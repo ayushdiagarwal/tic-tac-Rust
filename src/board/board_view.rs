@@ -3,48 +3,70 @@
 // make impl board which does all the basic operations
 // prints_board, makes_move, changes_player, checks_winner, checks_draw, initializes_board
 
-// this is the file which should contain the board view
-//
-// when using this function, just pass in the board, and it should work fine
+use crate::game::player::Player;
 
-// use a 1-D array instead of a 2-D array
 pub struct Board {
-    pub board: [[u32; 3]; 3],
+    pub board: [u32; 9],
+    pub cur_player: Player,
 }
 
 impl Board {
     // prints the board
     pub fn prints_board(&mut self) {
         for row in 0..3 {
-            println!("{:?}", self.board[row]);
+            for col in 0..3 {
+                print!("{} ", self.to_player(self.board[row * 3 + col]));
+            }
+            println!()
         }
     }
 
-    // cur_player needs to passed in as a reference
-    pub fn make_move(&mut self, cur_player: u32, pos: u32) {
-        // makes a move
-        // change the player and the value of
+    pub fn to_player(&mut self, val: u32) -> char {
+        match val {
+            0 => '_',
+            1 => 'X',
+            2 => 'O',
+            _ => ' ',
+        }
+    }
 
-        let row = (pos / 3) as usize;
-        let col = (pos % 3) as usize;
+    pub fn player_to_u32(&mut self) -> u32 {
+        match self.cur_player {
+            Player::X => 1,
+            Player::O => 2,
+        }
+    }
 
-        // check if it is empty or not
+    // makes a move
+    pub fn make_move(&mut self, pos: u32) {
+        if self.board[pos as usize] == 0 {
+            self.board[pos as usize] = self.player_to_u32();
 
-        if self.board[row][col] == 0 {
-            self.board[row][col] = cur_player;
-
-            // call the function to change the player
-            self.change_player(cur_player);
+            if self.checks_winner() {
+                self.prints_board();
+                println!("Player {} wins!", self.player_to_u32());
+                return;
+            } else {
+                println!("Player {}'s turn", self.player_to_u32());
+                self.cur_player.switch_player();
+            }
         } else {
             println!("Invalid move");
+            // returns to the same player
         }
     }
 
-    pub fn change_player(&mut self, cur_player: u32) {
-        // I need a reference to the player, instead of the player itself, so I can change its value
+    pub fn checks_draw(&mut self) -> bool {
+        for i in 0..9 {
+            if self.board[i] == 0 {
+                return true;
+            }
+        }
+        println!("It's a draw!");
+        return false;
     }
 
-    pub fn checks_winner(&mut self, cur_player: u32) -> bool {
+    pub fn checks_winner(&mut self) -> bool {
         let win_conditions = [
             [0, 1, 2],
             [3, 4, 5],
@@ -59,11 +81,11 @@ impl Board {
         for condition in win_conditions {
             let mut count = 0;
 
-            // for index in condition {
-            //     if self.board[index as usize] == cur_player {
-            //         count += 1;
-            //     }
-            // }
+            for index in condition {
+                if self.board[index as usize] == self.player_to_u32() {
+                    count += 1;
+                }
+            }
 
             if count == 3 {
                 return true;

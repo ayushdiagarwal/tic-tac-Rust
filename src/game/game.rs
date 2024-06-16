@@ -1,4 +1,0 @@
-enum player {
-    X,
-    O,
-}
