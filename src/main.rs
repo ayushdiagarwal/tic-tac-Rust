@@ -1,8 +1,5 @@
-// arguments would be the board and the current player
-fn checkWinner() -> bool {
-    // check all possible conditions for the winner,
-    true
-}
+mod board;
+use board::board_view;
 
 fn main() {
     // 1 -> O
@@ -10,9 +7,9 @@ fn main() {
 
     let mut board: [[u32; 3]; 3] = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
-    // I will use referencing to print the board because it sounds more cool heheeh
+    let mut grid = board_view::Board {
+        board, // shorthand intialization
+    };
 
-    for row in 0..3 {
-        println!("{:?}", board[row]);
-    }
+    grid.prints_board();
 }

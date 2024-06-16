@@ -1,0 +1,4 @@
+enum player {
+    X,
+    O,
+}
