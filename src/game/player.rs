@@ -118,15 +118,19 @@ impl Player {
 
     pub fn find_best_move(&mut self, position: [u32; 9]) -> usize {
         let mut best_move = None;
-        let mut best_value = 100;
+        let mut best_value = i32::MAX; // Start with the highest possible value for minimizing
 
-        let mut temp_board = position;
         for i in 0..9 {
-            if temp_board[i] == 0 {
+            if position[i] == 0 {
+                let mut temp_board = position;
                 temp_board[i] = 2; // O is the AI player
-                                   // it is now X's turn to play, so we need to set maximizingPlayer = True;
-                let move_value = self.minimax(temp_board, 9, true);
-                println!("move value: {}", move_value);
+                let mut depth = 0; // depth should be the number of moves that is left on the board
+                for i in 0..9 {
+                    if temp_board[i] == 0 {
+                        depth += 1;
+                    }
+                }
+                let move_value = self.minimax(temp_board, depth, true); // Maximizing player's turn next (X)
                 temp_board[i] = 0;
                 if move_value < best_value {
                     best_value = move_value;
