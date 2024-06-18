@@ -1,5 +1,5 @@
 mod board;
-use board::board_view;
+use board::board_view::{self, Board};
 
 mod game;
 use game::player::Player;
@@ -7,26 +7,33 @@ use game::player::Player;
 use std::io;
 
 fn main() {
-    let board: [u32; 9] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let cur_player = Player::X;
-
-    // when I'm passing board and cur_player, I'm passing a copy of it, it would be better to pass the reference to it
     let mut grid = board_view::Board {
-        board, // shorthand intialization
-        cur_player,
+        board: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        cur_player: Player::O,
     };
 
+    // For against the comp
     while !grid.checks_winner() && grid.checks_draw() {
         grid.prints_board();
 
-        println!("Enter Your Move: ");
-        let mut inp = String::new();
-        io::stdin()
-            .read_line(&mut inp)
-            .expect("Enter something nice");
+        match grid.cur_player {
+            Player::X => {
+                println!("Enter Your Move: ");
+                let mut inp = String::new();
 
-        let inp_move: u32 = inp.trim().parse().expect("Enter some int ya cunt");
+                io::stdin()
+                    .read_line(&mut inp)
+                    .expect("Enter something nice");
 
-        grid.make_move(inp_move - 1);
+                let inp_move: u32 = inp.trim().parse().expect("Enter some int ya cunt");
+                grid.make_move(inp_move - 1);
+            }
+            Player::O => {
+                let ai_move = grid.cur_player.find_best_move(grid.board);
+                grid.make_move(ai_move as u32);
+                // let the comp choose
+                // let's choose a random position for now
+            }
+        }
     }
 }

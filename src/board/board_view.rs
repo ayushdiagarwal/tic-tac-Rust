@@ -1,8 +1,3 @@
-// using enum for the current player
-// struct Game {player: cur_player, board: board_view}
-// make impl board which does all the basic operations
-// prints_board, makes_move, changes_player, checks_winner, checks_draw, initializes_board
-
 use crate::game::player::Player;
 
 pub struct Board {
@@ -89,6 +84,7 @@ impl Board {
 
             if count == 3 {
                 return true;
+                // the cur_player would be the winner
             }
         }
         return false;
