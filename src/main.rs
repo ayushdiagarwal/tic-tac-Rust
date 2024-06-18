@@ -29,9 +29,14 @@ fn main() {
                 grid.make_move(inp_move - 1);
             }
             Player::O => {
+                println!("-------");
                 let ai_move = grid.cur_player.find_best_move(grid.board);
                 grid.make_move(ai_move as u32);
             }
         }
+    }
+    if grid.checks_winner() {
+        grid.prints_board();
+        println!("Player {} WINS!", grid.player_to_u32());
     }
 }

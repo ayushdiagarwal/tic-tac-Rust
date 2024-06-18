@@ -38,12 +38,9 @@ impl Board {
             self.board[pos as usize] = self.player_to_u32();
 
             if self.checks_winner() {
-                self.prints_board();
-                println!("Player {} wins!", self.player_to_u32());
                 return;
             } else {
                 if !self.checks_draw() {
-                    println!("\n-----\n");
                     self.cur_player.switch_player();
                 }
             }
@@ -90,5 +87,20 @@ impl Board {
             }
         }
         return false;
+    }
+
+    pub fn evaluate(&mut self) -> i32 {
+        // Evaluate the board
+        // If X wins, return 1
+        // If O wins, return -1
+        // If draw, return 0
+
+        if self.checks_winner() {
+            match self.cur_player {
+                Player::X => return 1,
+                Player::O => return -1,
+            }
+        }
+        return 0;
     }
 }
