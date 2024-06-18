@@ -42,8 +42,10 @@ impl Board {
                 println!("Player {} wins!", self.player_to_u32());
                 return;
             } else {
-                println!("Player {}'s turn", self.player_to_u32());
-                self.cur_player.switch_player();
+                if !self.checks_draw() {
+                    println!("\n-----\n");
+                    self.cur_player.switch_player();
+                }
             }
         } else {
             println!("Invalid move");
@@ -54,11 +56,11 @@ impl Board {
     pub fn checks_draw(&mut self) -> bool {
         for i in 0..9 {
             if self.board[i] == 0 {
-                return true;
+                return false;
             }
         }
         println!("It's a draw!");
-        return false;
+        return true;
     }
 
     pub fn checks_winner(&mut self) -> bool {
