@@ -1,5 +1,5 @@
 mod board;
-use board::board_view::{self, Board};
+use board::board_view::Board;
 
 mod game;
 use game::player::Player;
@@ -7,7 +7,7 @@ use game::player::Player;
 use std::io;
 
 fn main() {
-    let mut grid = board_view::Board {
+    let mut grid = Board {
         board: [0, 0, 0, 0, 0, 0, 0, 0, 0],
         cur_player: Player::O,
     };
